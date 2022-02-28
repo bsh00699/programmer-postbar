@@ -12,5 +12,10 @@ npm init --database postgres
 
 npm install express
 npm install -D @types/express morgan @types/morgan
+npm install -D nodemon
+npm install class-validator
+npm install bcrypt
+npm install -D @types/bcrypt
+npm install class-transformer
 npm start
 ```
