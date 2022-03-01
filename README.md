@@ -17,5 +17,9 @@ npm install class-validator
 npm install bcrypt
 npm install -D @types/bcrypt
 npm install class-transformer
-npm start
+npm install jsonwebtoken cookie cookie-parser
+npm install -D @types/jsonwebtoken @types/cookie @types/cookie-parser
+npm i dotenv
+
+
 ```
