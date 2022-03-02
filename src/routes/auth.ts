@@ -3,7 +3,7 @@ import { isEmpty, validate } from 'class-validator'
 import bcrypt from 'bcrypt'
 import cookie from 'cookie'
 import jwt from 'jsonwebtoken'
-import { User } from "../entities/User";
+import User from "../entities/User";
 import auth from '../middleware/auth'
 
 const register = async (req: Request, res: Response) => {
