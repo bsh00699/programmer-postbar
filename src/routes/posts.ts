@@ -23,6 +23,6 @@ const createPost = async (req: Request, res: Response) => {
 }
 
 const router = Router()
-router.get('/', auth, createPost)
+router.post('/', auth, createPost)
 
 export default router

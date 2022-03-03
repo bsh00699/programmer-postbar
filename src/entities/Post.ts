@@ -11,6 +11,7 @@ import bcrypt from 'bcrypt'
 import { Exclude } from 'class-transformer'
 import EntityInter from './Entity'
 import User from './User'
+import { makeId, slugify } from '../util/helper'
 
 @TOEntity("posts")
 export default class Post extends EntityInter {
@@ -38,6 +39,11 @@ export default class Post extends EntityInter {
 
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
-  user: User;
+  user: User
 
+  @BeforeInsert()
+  makeIdAndSlug() {
+    this.identifier = makeId(7) // 参数尽量大一点，增加它为唯一数量级的概率
+    this.slug = slugify(this.title)
+  }
 }
