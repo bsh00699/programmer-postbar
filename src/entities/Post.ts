@@ -11,6 +11,7 @@ import bcrypt from 'bcrypt'
 import { Exclude } from 'class-transformer'
 import EntityInter from './Entity'
 import User from './User'
+import Sub from './Sub'
 import { makeId, slugify } from '../util/helper'
 
 @TOEntity("posts")
@@ -40,6 +41,10 @@ export default class Post extends EntityInter {
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User
+
+  @ManyToOne(() => Sub, (sub) => sub.posts)
+  @JoinColumn({ name: 'subName', referencedColumnName: 'name' })
+  sub: Sub
 
   @BeforeInsert()
   makeIdAndSlug() {

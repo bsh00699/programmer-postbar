@@ -8,6 +8,7 @@ import trim from './middleware/trim'
 
 import authRoutes from './routes/auth'
 import postRoutes from './routes/posts'
+import subRoutes from './routes/subs'
 
 dotenv.config()
 const PORT = process.env.PORT
@@ -20,6 +21,7 @@ app.use(cookieParser())
 
 app.use('/api/auth', authRoutes)
 app.use('/api/posts', postRoutes)
+app.use('/api/subs', subRoutes)
 
 app.get('/', (_, res) => {
   res.send('hello postbar')
