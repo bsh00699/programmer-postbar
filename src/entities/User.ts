@@ -33,7 +33,7 @@ export default class User extends EntityInter {
   @Length(6, 255)
   password: string;
 
-  @OneToMany((type) => Post, (post) => post.user) // 一个用户可以对应多个post
+  @OneToMany(() => Post, (post) => post.user) // 一个用户可以对应多个post
   posts: Post[];
 
   @BeforeInsert()
