@@ -25,30 +25,53 @@ const createPost = async (req: Request, res: Response) => {
   }
 }
 
-const getPosts = async (req: Request, res: Response) => {
-  const currentPage: number = (req.query.page || 0) as number
-  const postsPerPage: number = (req.query.count || 8) as number
+const getPosts = async (_: Request, res: Response) => {
+  // const currentPage: number = (req.query.page || 0) as number
+  // const postsPerPage: number = (req.query.count || 8) as number
 
   try {
     const posts = await Post.find({
       order: { createdAt: 'DESC' },
-      relations: ['comments', 'votes', 'sub'],
-      skip: currentPage * postsPerPage,
-      take: postsPerPage,
+      relations: ['sub']
     })
+    // const posts = await Post.find({
+    //   order: { createdAt: 'DESC' },
+    //   relations: ['comments', 'votes', 'sub'],
+    //   skip: currentPage * postsPerPage,
+    //   take: postsPerPage,
+    // })
 
-    if (res.locals.user) {
-      posts.forEach((p) => p.setUserVote(res.locals.user))
-    }
+    // if (res.locals.user) {
+    //   posts.forEach((p) => p.setUserVote(res.locals.user))
+    // }
 
     return res.json(posts)
   } catch (err) {
     console.log(err)
-    return res.status(500).json({ error: 'Something went wrong' })
+    return res.status(500).json({ error: 'Get posts failed' })
   }
 }
 
+const getPost = async (req: Request, res: Response) => {
+  const { identifier, slug } = req.params
+  try {
+    const post = await Post.findOneOrFail({
+      identifier, slug
+    }, {
+      relations: ['sub']
+    })
+    return res.json(post)
+  } catch (err) {
+    console.log(err)
+    return res.status(404).json({ error: 'Post not found' })
+  }
+}
+
+
 const router = Router()
 router.post('/', auth, createPost)
+router.get('/', getPosts)
+router.get('/:identifier/:slug', getPost)
+
 
 export default router
