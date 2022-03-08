@@ -5,7 +5,8 @@ import {
   Index,
   BeforeInsert,
   ManyToOne,
-  JoinColumn
+  JoinColumn,
+  OneToMany
 } from "typeorm";
 import bcrypt from 'bcrypt'
 import { Exclude } from 'class-transformer'
@@ -13,6 +14,7 @@ import EntityInter from './Entity'
 import User from './User'
 import Sub from './Sub'
 import { makeId, slugify } from '../util/helper'
+import Comment from "./Comments";
 
 @TOEntity("posts")
 export default class Post extends EntityInter {
@@ -45,6 +47,9 @@ export default class Post extends EntityInter {
   @ManyToOne(() => Sub, (sub) => sub.posts)
   @JoinColumn({ name: 'subName', referencedColumnName: 'name' })
   sub: Sub
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[]
 
   @BeforeInsert()
   makeIdAndSlug() {
