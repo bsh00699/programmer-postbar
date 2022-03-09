@@ -19,9 +19,17 @@ npm install -D @types/jsonwebtoken @types/cookie @types/cookie-parser
 npm i dotenv
 
 ```
-#### use cli
+#### use cli migration
 ```
 npm run typeorm schema:drop
-npm run typeorm migration:generate -- --name create-users-table // migration
+// user
+npm run typeorm migration:generate -- --name create-users-table
 npm run typeorm migration:run
+
+// comments
+npm run typeorm migration:generate -- --name create-comments-table
+npm run typeorm migration:run
+
+// 撤销上一次migration
+npm run typeorm migration:revert
 ```
