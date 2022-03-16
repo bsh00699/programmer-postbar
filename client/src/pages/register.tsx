@@ -1,4 +1,6 @@
 import { FormEvent, useState } from 'react'
+import { Form, Input, Button, Checkbox } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import Head from 'next/head'
 import Link from 'next/link'
 // import Axios from 'axios'
@@ -40,75 +42,61 @@ export default function Register() {
   }
 
   return (
-    <div className="bg-white">
+    <div>
       <Head>
         <title>Register</title>
       </Head>
       <div
-        className="h-screen bg-center bg-no-repeat bg-cover"
+        className="flex flex-col justify-center h-screen pl-40 bg-center bg-no-repeat bg-cover"
         style={{
           backgroundImage: `url('/images/work.jpg')`,
         }}
       >
-        <div className="flex pl-20 pt-80">
-          <div className="bg-white w-max">
-            <h1 className="mb-2 text-lg font-medium">Sign Up</h1>
-            <p className="mb-10 text-xs">
-              By continuing, you agree to our User Agreement and Privacy Policy
+        <div className="px-10 py-10 bg-white w-70">
+          <h1 className="mb-2 text-lg font-medium">Sign Up</h1>
+          <p className="mb-10 text-xs">
+            By continuing, you agree to our User Agreement and Privacy Policy
           </p>
-            <form onSubmit={submitForm}>
-              <div className="mb-6">
-                <input
-                  type="checkbox"
-                  className="mr-1 cursor-pointer"
-                  id="agreement"
-                  checked={agreement}
-                  onChange={(e) => setAgreement(e.target.checked)}
-                />
-                <label htmlFor="agreement" className="text-xs cursor-pointer">
-                  I agree to get emails about cool stuff on Readit
-              </label>
-                <small className="block font-medium text-red-600">
-                  {errors.agreement}
-                </small>
-              </div>
-              {/* <InputGroup
-              className="mb-2"
-              type="email"
-              value={email}
-              setValue={setEmail}
-              placeholder="EMAIL"
-              error={errors.email}
-            />
-            <InputGroup
-              className="mb-2"
-              type="text"
-              value={username}
-              setValue={setUsername}
-              placeholder="USERNAME"
-              error={errors.username}
-            />
-            <InputGroup
-              className="mb-4"
-              type="password"
-              value={password}
-              setValue={setPassword}
-              placeholder="PASSWORD"
-              error={errors.password}
-            /> */}
-
-              <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border border-blue-500 rounded">
-                Sign Up
-            </button>
-            </form>
-            <small>
-              Already a readitor?
+          <Form
+            name="normal_login"
+            className="login-form"
+            initialValues={{ remember: true }}
+            onFinish={() => { }}
+          >
+            <Form.Item
+              name="username"
+              rules={[{ required: true, message: 'Please input your Username!' }]}
+            >
+              <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: 'Please input your Password!' }]}
+            >
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Password"
+              />
+            </Form.Item>
+            <Form.Item>
+              <Form.Item name="remember" valuePropName="checked" noStyle>
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item>
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" className="w-full">
+                Log in
+                </Button>
+              {/* Or <a href="">register now!</a> */}
+            </Form.Item>
+          </Form>
+        </div>
+        {/* <small>Already a readitor?
             <Link href="/login">
                 <a className="ml-1 text-blue-500 uppercase">Log In</a>
-              </Link>
-            </small>
-          </div>
-        </div>
+            </Link>
+          </small> */}
       </div>
     </div>
   )
