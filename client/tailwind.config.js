@@ -3,6 +3,11 @@ module.exports = {
   content: [],
   theme: {
     extend: {
+      fontFamily: {
+        body: [
+          'IBM Plex Sans'
+        ]
+      },
       spacing: {
         70: '20rem'
       }

@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react'
 import { Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import Head from 'next/head'
 import Link from 'next/link'
 // import Axios from 'axios'
@@ -54,15 +54,23 @@ export default function Register() {
       >
         <div className="px-10 py-10 bg-white w-70">
           <h1 className="mb-2 text-lg font-medium">Sign Up</h1>
-          <p className="mb-10 text-xs">
-            By continuing, you agree to our User Agreement and Privacy Policy
-          </p>
+          <p className="mb-10 text-xs">Hi friend you've come to the right place</p>
           <Form
             name="normal_login"
             className="login-form"
             initialValues={{ remember: true }}
             onFinish={() => { }}
           >
+            <Form.Item
+              name="email"
+              rules={[{ required: true, message: 'Please input your Email!' }]}
+            >
+              <Input
+                prefix={<MailOutlined />}
+                type="email"
+                placeholder="Email"
+              />
+            </Form.Item>
             <Form.Item
               name="username"
               rules={[{ required: true, message: 'Please input your Username!' }]}
@@ -85,18 +93,15 @@ export default function Register() {
               </Form.Item>
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" className="w-full">
-                Log in
-                </Button>
-              {/* Or <a href="">register now!</a> */}
+              <Button type="primary" htmlType="submit" className="w-full">Sing Up</Button>
             </Form.Item>
           </Form>
-        </div>
-        {/* <small>Already a readitor?
+          <small>Already a account?
             <Link href="/login">
-                <a className="ml-1 text-blue-500 uppercase">Log In</a>
+              <a className="ml-1 text-blue-500 uppercase">Log In</a>
             </Link>
-          </small> */}
+          </small>
+        </div>
       </div>
     </div>
   )
