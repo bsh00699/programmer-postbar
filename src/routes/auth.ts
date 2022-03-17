@@ -6,6 +6,14 @@ import jwt from 'jsonwebtoken'
 import User from "../entities/User";
 import auth from '../middleware/auth'
 
+const mapErrors = (errors: object[]) => {
+  return errors.reduce((prev: any, curr: any) => {
+    const { property, constraints } = curr
+    prev[property] = Object.entries(constraints)[0][1]
+    return prev
+  }, {})
+}
+
 const register = async (req: Request, res: Response) => {
   const { email, username, password } = req.body
   try {
@@ -15,7 +23,7 @@ const register = async (req: Request, res: Response) => {
     if (emailUser) errors.email = 'Email is already exist'
     if (usernameUser) errors.username = 'Username is already exist'
     if (Object.keys(errors).length > 0) {
-      return res.status(400).json({ errors })
+      return res.status(400).json(errors)
     }
 
     const user = new User({
@@ -24,7 +32,8 @@ const register = async (req: Request, res: Response) => {
 
     errors = await validate(user)
     if (errors.length > 0) {
-      return res.status(400).json({ errors })
+      // 统一error格式: mapErrors(errors)
+      return res.status(400).json(mapErrors(errors))
     }
 
     await user.save()
