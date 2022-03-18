@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import morgan from 'morgan'
@@ -18,6 +19,11 @@ app.use(express.json())
 app.use(morgan('dev'))
 app.use(trim)
 app.use(cookieParser())
+app.use(cors({
+  credentials: true,
+  origin: process.env.ORIGIN,
+  optionsSuccessStatus: 200
+}))
 
 app.use('/api/auth', authRoutes)
 app.use('/api/posts', postRoutes)

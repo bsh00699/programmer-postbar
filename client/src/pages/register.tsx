@@ -1,45 +1,34 @@
-import { FormEvent, useState } from 'react'
-import { Form, Input, Button, Checkbox } from 'antd';
+import { useState } from 'react'
+import { Form, Input, Button, Checkbox, message } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import Head from 'next/head'
 import Link from 'next/link'
-// import Axios from 'axios'
-// import { useRouter } from 'next/router'
-
-// import InputGroup from '../components/InputGroup'
+import Axios from 'axios';
+import { useRouter } from 'next/router'
 // import { useAuthState } from '../context/auth'
 
 export default function Register() {
-  const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [agreement, setAgreement] = useState(false)
-  const [errors, setErrors] = useState<any>({})
-
   // const { authenticated } = useAuthState()
 
-  // const router = useRouter()
+  const router = useRouter()
   // if (authenticated) router.push('/')
-
-  const submitForm = async (event: FormEvent) => {
-    event.preventDefault()
-
-    if (!agreement) {
-      setErrors({ ...errors, agreement: 'You must agree to T&Cs' })
-      return
+  const onFinish = async (values: {
+    email: string,
+    password: string,
+    username: string
+  }) => {
+    const { email, password, username } = values
+    try {
+      await Axios.post('/auth/register', {
+        email,
+        password,
+        username,
+      })
+      router.push('/login')
+    } catch (err) {
+      message.error(`Sign up failed: ${JSON.stringify(err.response.data)}`);
     }
-    // try {
-    //   await Axios.post('/auth/register', {
-    //     email,
-    //     password,
-    //     username,
-    //   })
-
-    //   router.push('/login')
-    // } catch (err) {
-    //   setErrors(err.response.data)
-    // }
-  }
+  };
 
   return (
     <div>
@@ -54,12 +43,12 @@ export default function Register() {
       >
         <div className="px-10 py-10 bg-white w-70">
           <h1 className="mb-2 text-lg font-medium">Sign Up</h1>
-          <p className="mb-10 text-xs">Hi friend you've come to the right place</p>
+          <p className="mb-10 text-xs">Hi my friend you've come to the right place</p>
           <Form
             name="normal_login"
             className="login-form"
             initialValues={{ remember: true }}
-            onFinish={() => { }}
+            onFinish={onFinish}
           >
             <Form.Item
               name="email"
@@ -86,11 +75,6 @@ export default function Register() {
                 type="password"
                 placeholder="Password"
               />
-            </Form.Item>
-            <Form.Item>
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
             </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType="submit" className="w-full">Sing Up</Button>

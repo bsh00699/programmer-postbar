@@ -1,83 +1,79 @@
-import { FormEvent, useState } from 'react'
+import { useState } from 'react'
+import { Form, Input, Button, Checkbox, message } from 'antd';
+import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import Head from 'next/head'
 import Link from 'next/link'
-import Axios from 'axios'
+import Axios from 'axios';
 import { useRouter } from 'next/router'
+// import { useAuthState } from '../context/auth'
 
-import { useAuthDispatch, useAuthState } from '../context/auth'
-
-import InputGroup from '../components/InputGroup'
-
-export default function Login() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState<any>({})
-
-  const dispatch = useAuthDispatch()
-  const { authenticated } = useAuthState()
+export default function Register() {
+  // const { authenticated } = useAuthState()
 
   const router = useRouter()
-  if (authenticated) router.push('/')
-
-  const submitForm = async (event: FormEvent) => {
-    event.preventDefault()
-
+  // if (authenticated) router.push('/')
+  const onFinish = async (values: {
+    password: string,
+    username: string
+  }) => {
+    const { password, username } = values
     try {
-      const res = await Axios.post('/auth/login', {
-        username,
+      await Axios.post('/auth/login', {
         password,
+        username,
       })
-
-      dispatch('LOGIN', res.data)
-
-      router.back()
+      router.push('/')
     } catch (err) {
-      setErrors(err.response.data)
+      message.error(`Login failed: ${JSON.stringify(err.response.data)}`);
     }
-  }
+  };
 
   return (
-    <div className="flex bg-white">
+    <div>
       <Head>
         <title>Login</title>
       </Head>
-
       <div
-        className="h-screen bg-center bg-cover w-36"
+        className="flex flex-col justify-center h-screen pl-40 bg-center bg-no-repeat bg-cover"
         style={{
-          backgroundImage: `url('${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/images/bricks.jpg')`,
+          backgroundImage: `url('/images/work.jpg')`,
         }}
-      ></div>
-      <div className="flex flex-col justify-center pl-6">
-        <div className="w-70">
+      >
+        <div className="px-10 py-10 bg-white w-70">
           <h1 className="mb-2 text-lg font-medium">Login</h1>
-          <p className="mb-10 text-xs">
-            By continuing, you agree to our User Agreement and Privacy Policy
-          </p>
-          <form onSubmit={submitForm}>
-            <InputGroup
-              className="mb-2"
-              type="text"
-              value={username}
-              setValue={setUsername}
-              placeholder="USERNAME"
-              error={errors.username}
-            />
-            <InputGroup
-              className="mb-4"
-              type="password"
-              value={password}
-              setValue={setPassword}
-              placeholder="PASSWORD"
-              error={errors.password}
-            />
-
-            <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border border-blue-500 rounded">
-              Login
-            </button>
-          </form>
-          <small>
-            New to Readit?
+          <p className="mb-10 text-xs">Hi my friend, welcome to Programmer Post</p>
+          <Form
+            name="normal_login"
+            className="login-form"
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+          >
+            <Form.Item
+              name="username"
+              rules={[{ required: true, message: 'Please input your Username!' }]}
+            >
+              <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: 'Please input your Password!' }]}
+            >
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Password"
+              />
+            </Form.Item>
+            <Form.Item>
+              <Form.Item name="remember" valuePropName="checked" noStyle>
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item>
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" className="w-full">Login</Button>
+            </Form.Item>
+          </Form>
+          <small>New to user?
             <Link href="/register">
               <a className="ml-1 text-blue-500 uppercase">Sign Up</a>
             </Link>
