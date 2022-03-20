@@ -1,13 +1,24 @@
-import '../styles/globals.css'
-import 'antd/dist/antd.css';
 import { AppProps } from 'next/app'
 import Axios from 'axios';
+import { Fragment } from 'react'
+import { useRouter } from 'next/router'
+import Navebar from '../components/Navbar'
+import '../styles/tailwind.css'
+import 'antd/dist/antd.css';
 
 Axios.defaults.baseURL = 'http://localhost:3333/api'
-Axios.defaults.withCredentials = true
+Axios.defaults.withCredentials = true // set cookie, withCredentials: true
 
 function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  const { pathname } = useRouter()
+  const authRoute = pathname === '/register' || pathname === '/login'
+
+  return (
+    <Fragment>
+      {!authRoute && <Navebar />}
+      <Component {...pageProps} />
+    </Fragment>
+  )
 }
 
 export default App
