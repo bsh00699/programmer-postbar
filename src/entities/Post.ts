@@ -6,10 +6,11 @@ import {
   BeforeInsert,
   ManyToOne,
   JoinColumn,
-  OneToMany
+  OneToMany,
+  AfterLoad
 } from "typeorm";
 import bcrypt from 'bcrypt'
-import { Exclude } from 'class-transformer'
+import { Exclude, Expose } from 'class-transformer'
 import EntityInter from './Entity'
 import User from './User'
 import Sub from './Sub'
@@ -40,6 +41,9 @@ export default class Post extends EntityInter {
   @Column()
   subName: string  // 文章子名称
 
+  @Column()
+  username: string
+
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User
@@ -50,6 +54,18 @@ export default class Post extends EntityInter {
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[]
+
+  // 可以这样添加新的 url 字段
+  @Expose() get url(): string {
+    return `/r/${this.subName}/${this.identifier}/${this.slug}`
+  }
+
+  // 也这样添加新的 url 字段
+  // protected url: string
+  // @AfterLoad()
+  // createFields() {
+  //   this.url = `/r/${this.subName}/${this.identifier}/${this.slug}`
+  // }
 
   @BeforeInsert()
   makeIdAndSlug() {
