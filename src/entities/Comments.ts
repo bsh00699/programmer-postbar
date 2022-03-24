@@ -4,12 +4,14 @@ import {
   Index,
   BeforeInsert,
   ManyToOne,
-  JoinColumn
+  JoinColumn,
+  OneToMany
 } from "typeorm";
 import EntityInter from './Entity'
 import { makeId } from '../util/helper'
 import User from './User'
 import Post from './Post'
+import Vote from "./Vote";
 
 @TOEntity('comments')
 export default class Comment extends EntityInter {
@@ -36,6 +38,9 @@ export default class Comment extends EntityInter {
   // 每个帖子也有多个评论
   @ManyToOne(() => Post, post => post.comments, { nullable: false })
   post: Post
+
+  @OneToMany(() => Vote, vote => vote.comment)
+  votes: Vote[]
 
   @BeforeInsert()
   makeIdAndSlug() {

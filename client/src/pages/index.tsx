@@ -4,6 +4,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import Head from 'next/head'
 import { Fragment, useEffect, useState } from 'react'
 import Link from 'next/link'
+// import { GetServerSideProps } from 'next' 
 import { Post } from '../common/types'
 
 dayjs.extend(relativeTime)
@@ -92,3 +93,14 @@ export default function Home() {
     </div>
   )
 }
+
+// SSR
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   try {
+//     const res = await Axios.get('/posts')
+
+//     return { props: { posts: res.data } }
+//   } catch (err) {
+//     return { props: { error: 'Something went wrong' } }
+//   }
+// }

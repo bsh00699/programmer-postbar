@@ -14,6 +14,7 @@ import { Exclude, Expose } from 'class-transformer'
 import EntityInter from './Entity'
 import User from './User'
 import Sub from './Sub'
+import Vote from "./Vote";
 import { makeId, slugify } from '../util/helper'
 import Comment from "./Comments";
 
@@ -54,6 +55,9 @@ export default class Post extends EntityInter {
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[]
+
+  @OneToMany(() => Vote, vote => vote.comment)
+  votes: Vote[]
 
   // 可以这样添加新的 url 字段
   @Expose() get url(): string {
