@@ -10,6 +10,7 @@ import bcrypt from 'bcrypt'
 import { Exclude } from 'class-transformer'
 import EntityInter from './Entity'
 import Post from './Post'
+import Vote from './Vote'
 
 @TOEntity("users")
 export default class User extends EntityInter {
@@ -36,6 +37,9 @@ export default class User extends EntityInter {
 
   @OneToMany(() => Post, (post) => post.user) // 一个用户可以对应多个post
   posts: Post[];
+
+  @OneToMany(() => Vote, (vote) => vote.user)
+  votes: Vote[]
 
   @BeforeInsert()
   async hashPassword() {

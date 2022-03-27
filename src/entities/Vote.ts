@@ -1,15 +1,16 @@
 import {
   Entity as TOEntity,
   Column,
-  JoinColumn,
-  ManyToOne
-} from "typeorm";
+  ManyToOne,
+  JoinColumn
+} from 'typeorm'
+
 import EntityInter from './Entity'
 import User from './User'
 import Post from './Post'
-import Comment from "./Comments";
+import Comment from './Comment'
 
-@TOEntity("votes")
+@TOEntity('votes')
 export default class Vote extends EntityInter {
   constructor(vote: Partial<Vote>) {
     super()
@@ -17,18 +18,18 @@ export default class Vote extends EntityInter {
   }
 
   @Column()
-  value: number;
+  value: number
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User
+
+  @Column()
+  username: string
 
   @ManyToOne(() => Post)
   post: Post
 
   @ManyToOne(() => Comment)
   comment: Comment
-
-  @Column()
-  username: string;
 }

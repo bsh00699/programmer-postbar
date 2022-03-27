@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { getConnection } from 'typeorm'
-import Comment from "../entities/Comments";
+import Comment from "../entities/Comment";
 import Post from "../entities/Post";
 import Sub from '../entities/Sub'
 import User from "../entities/User";
@@ -11,7 +11,7 @@ const VOTE_TYPE = [-1, 0, 1]
 
 const vote = async (req: Request, res: Response) => {
   const { identifier, slug, commentIdentifier, value } = req.body
-  if (VOTE_TYPE.includes(value)) {
+  if (!VOTE_TYPE.includes(value)) {
     return res.status(400).json({ value: 'Value must be -1, 0 or 1' })
   }
   try {
@@ -27,18 +27,23 @@ const vote = async (req: Request, res: Response) => {
     }
 
     if (!vote && value === 0) {
+      // 没有投票 并且 票数是 0
       return res.status(404).json({ error: 'Vote not found' })
     } else if (!vote) {
+      //没有投过票，但是票数 是 1 或者 -1，需要创建投票
       vote = new Vote({ user, value })
       if (comment) {
+        // 对评论进行投票
         vote.comment = comment
       } else {
+        // 对帖子进行投票
         vote.post = post
       }
       await vote.save()
-    } else if (value === 0) {
+    } else if (value === 0) { // vote && value === 0
       await vote.remove()
     } else if (vote.value !== value) {
+      // 更新db中已经存在的投票
       vote.value = value
       await vote.save()
     }
@@ -47,8 +52,8 @@ const vote = async (req: Request, res: Response) => {
       { identifier, slug },
       { relations: ['comments', 'comments.votes', 'sub', 'votes'] }
     )
-    post.setUserVote(user)
-    post.comments.forEach((c) => c.setUserVote(user))
+    // post.setUserVote(user)
+    // post.comments.forEach((c) => c.setUserVote(user))
 
     return res.json(post)
 
