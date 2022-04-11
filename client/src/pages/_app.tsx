@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import Navebar from '../components/Navbar'
 import '../styles/tailwind.css'
 import 'antd/dist/antd.css';
+import '../styles/icons.css'
 
 Axios.defaults.baseURL = 'http://localhost:3333/api'
 Axios.defaults.withCredentials = true // set cookie, withCredentials: true

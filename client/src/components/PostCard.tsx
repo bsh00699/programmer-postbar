@@ -1,0 +1,89 @@
+import React, { Fragment } from 'react'
+import Axios from 'axios'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import Link from 'next/link'
+import { Post } from '../common/types'
+
+dayjs.extend(relativeTime)
+
+const ActionButton = ({ children }) => {
+  return (
+    <div className="px-1 py-1 mr-1 text-xs text-gray-400 rounded cursor-pointer hover:bg-gray-200">
+      {children}
+    </div>
+  )
+}
+
+interface PostCardProps {
+  post: Post
+}
+
+const PostCard = ({ post }) => {
+  const { identifier, body, subName, slug, title, createdAt, username, url } = post
+  return (
+    <div key={identifier} className="flex mt-4 bg-white rounded">
+      {/* 投票 */}
+      <div className="w-10 text-center bg-gray-100 rounded-l">
+        <p>vote</p>
+        {/* upvote */}
+        <div className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-red-500">
+          <i className='icon-arrow-up'></i>
+        </div>
+        {/* downvote */}
+        <div className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-red-500">
+          <i className='icon-arrow-down'></i>
+        </div>
+      </div>
+      {/* 内容 */}
+      <div className="w-full p-2">
+
+        <div className="flex items-center">
+          <Link href={`/r/${subName}`}>
+            <Fragment>
+              <img src="/images/gravatar.png" className='w-6 h-6 mr-1 rounded-full cursor-pointer' />
+              <span className='text-xs font-bold cursor-pointer hover:underline'>
+                /r/{subName}
+              </span>
+            </Fragment>
+          </Link>
+          <div className="text-xs text-gray-600">
+            <span className='mx-1'>•</span>
+            Posted by
+            <Link href={`u/${username}`}>
+              <span className='mx-1 hover:underline'>/u/{username}</span>
+            </Link>
+            <Link href={url}>
+              <span className='mx-1 hover:underline'>{dayjs(createdAt).fromNow()}</span>
+            </Link>
+          </div>
+        </div>
+        {/* title */}
+        <Link href={url}>
+          <span className='my-4 text-base font-medium'>{title}</span>
+        </Link>
+        {/* body */}
+        {body && <div className='my-1 text-sm'>{body}</div>}
+        {/* footer */}
+        <div className="flex items-center">
+          <Link href={url}>
+            <ActionButton>
+              <i className="mr-1 text-gray-400 fa-solid fa-message"></i>
+              <span className='font-bold'>0 Comments</span>
+            </ActionButton>
+          </Link>
+          <ActionButton>
+            <i className="mr-1 text-gray-400 fa-solid fa-share"></i>
+            <span className='font-bold'>Share</span>
+          </ActionButton>
+          <ActionButton>
+            <i className="mr-1 text-gray-400 fa-solid fa-bookmark"></i>
+            <span className='font-bold'>Save</span>
+          </ActionButton>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default PostCard
