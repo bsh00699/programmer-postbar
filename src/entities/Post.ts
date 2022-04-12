@@ -56,6 +56,7 @@ export default class Post extends EntityInter {
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[]
 
+  @Exclude()
   @OneToMany(() => Vote, vote => vote.post)
   votes: Vote[]
 
@@ -74,6 +75,11 @@ export default class Post extends EntityInter {
     }, 0)
   }
 
+  protected userVote: number
+  setUserVote(user: User) {
+    const index = this.votes?.findIndex(v => v.username === user.username)
+    this.userVote = index !== -1 ? this.votes[index].value : 0
+  }
 
   // 也这样添加新的 url 字段
   // protected url: string
