@@ -19,18 +19,30 @@ interface PostCardProps {
   post: Post
 }
 
-const PostCard = ({ post }) => {
-  const { identifier, body, subName, slug, title, createdAt, username, url } = post
+const PostCard = ({ post }: PostCardProps) => {
+  const { identifier, body, subName, slug, title, createdAt, username,
+    url, voteScore, commentCount } = post
+
+  const vote = async (value) => {
+    try {
+      const res = Axios.post('/misc/vote', {
+        identifier, slug, value
+      })
+    } catch (err) {
+      console.log(err);
+    }
+  }
   return (
     <div key={identifier} className="flex mt-4 bg-white rounded">
       {/* 投票 */}
       <div className="w-10 py-3 text-center bg-gray-100 rounded-l">
         {/* upvote */}
-        <div className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-red-500">
+        <div className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-red-500" onClick={() => vote(1)}>
           <i className='icon-arrow-up'></i>
         </div>
+        <div className='text-xs font-bold'>{voteScore}</div>
         {/* downvote */}
-        <div className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-600">
+        <div className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-600" onClick={() => vote(-1)}>
           <i className='icon-arrow-down'></i>
         </div>
       </div>
@@ -68,7 +80,7 @@ const PostCard = ({ post }) => {
           <Link href={url}>
             <ActionButton>
               <i className="mr-1 text-gray-400 fa-solid fa-message"></i>
-              <span className='font-bold'>0 Comments</span>
+              <span className='font-bold'>{commentCount} Comments</span>
             </ActionButton>
           </Link>
           <ActionButton>

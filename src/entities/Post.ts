@@ -53,6 +53,7 @@ export default class Post extends EntityInter {
   @JoinColumn({ name: 'subName', referencedColumnName: 'name' })
   sub: Sub
 
+  @Exclude()
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[]
 
