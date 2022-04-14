@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import Link from 'next/link'
 import { Post } from '../common/types'
+import classNames from 'classnames'
 
 dayjs.extend(relativeTime)
 
@@ -21,13 +22,15 @@ interface PostCardProps {
 
 const PostCard = ({ post }: PostCardProps) => {
   const { identifier, body, subName, slug, title, createdAt, username,
-    url, voteScore, commentCount } = post
+    url, voteScore, commentCount, userVote } = post
 
   const vote = async (value) => {
     try {
       const res = Axios.post('/misc/vote', {
         identifier, slug, value
       })
+      console.log('res--', res);
+
     } catch (err) {
       console.log(err);
     }
@@ -38,12 +41,16 @@ const PostCard = ({ post }: PostCardProps) => {
       <div className="w-10 py-3 text-center bg-gray-100 rounded-l">
         {/* upvote */}
         <div className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-red-500" onClick={() => vote(1)}>
-          <i className='icon-arrow-up'></i>
+          <i className={classNames('icon-arrow-up', {
+            'text-red-500': userVote === 1
+          })}></i>
         </div>
         <div className='text-xs font-bold'>{voteScore}</div>
         {/* downvote */}
         <div className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-600" onClick={() => vote(-1)}>
-          <i className='icon-arrow-down'></i>
+          <i className={classNames('icon-arrow-down', {
+            'text-blue-600': userVote === -1
+          })}></i>
         </div>
       </div>
       {/* 内容 */}

@@ -6,6 +6,7 @@ import Sub from '../entities/Sub'
 import User from "../entities/User";
 import Vote from "../entities/Vote";
 import auth from "../middleware/auth";
+import user from '../middleware/user'
 
 const VOTE_TYPE = [-1, 0, 1]
 
@@ -96,7 +97,7 @@ const topSubs = async (_: Request, res: Response) => {
 }
 
 const router = Router()
-router.post('/vote', auth, vote)
+router.post('/vote', user, auth, vote)
 router.get('/top-subs', topSubs)
 
 export default router

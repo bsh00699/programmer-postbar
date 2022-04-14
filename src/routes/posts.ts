@@ -1,8 +1,9 @@
 import { Request, Response, Router } from "express";
 import Post from "../entities/Post"
-import auth from '../middleware/auth'
 import Sub from "../entities/Sub"
 import Comment from "../entities/Comment";
+import auth from "../middleware/auth";
+import user from '../middleware/user'
 
 
 const createPost = async (req: Request, res: Response) => {
@@ -35,16 +36,17 @@ const getPosts = async (_: Request, res: Response) => {
       order: { createdAt: 'DESC' },
       relations: ['comments', 'votes', 'sub'],
     })
+    // 用户没登录可以获取posts
+    // 如果用户登录了, 需要获取用户自己登录的投票,添加到post
+    if (res.locals.user) {
+      posts.forEach((p) => p.setUserVote(res.locals.user))
+    }
     // const posts = await Post.find({
     //   order: { createdAt: 'DESC' },
     //   relations: ['comments', 'votes', 'sub'],
     //   skip: currentPage * postsPerPage,
     //   take: postsPerPage,
     // })
-
-    // if (res.locals.user) {
-    //   posts.forEach((p) => p.setUserVote(res.locals.user))
-    // }
 
     return res.json(posts)
   } catch (err) {
@@ -87,10 +89,10 @@ const commentOnPost = async (req: Request, res: Response) => {
 }
 
 const router = Router()
-router.post('/', auth, createPost)
-router.get('/', getPosts)
+router.post('/', user, auth, createPost)
+router.get('/', user, getPosts)
 router.get('/:identifier/:slug', getPost)
-router.post('/:identifier/:slug/comments', auth, commentOnPost)
+router.post('/:identifier/:slug/comments', user, auth, commentOnPost)
 
 
 export default router
