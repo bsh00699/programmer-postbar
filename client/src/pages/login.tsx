@@ -5,10 +5,11 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Axios from 'axios';
 import { useRouter } from 'next/router'
-// import { useAuthState } from '../context/auth'
+import { useAuthDispatch } from '../ctx/auth'
 
 export default function Register() {
-  // const { authenticated } = useAuthState()
+  // const { authenticated } = useAuthState ()
+  const dispatch = useAuthDispatch()
 
   const router = useRouter()
   // if (authenticated) router.push('/')
@@ -18,10 +19,11 @@ export default function Register() {
   }) => {
     const { password, username } = values
     try {
-      await Axios.post('/auth/login', {
+      const res = await Axios.post('/auth/login', {
         password,
         username,
       })
+      dispatch({ type: 'LOGIN', payload: res.data })
       router.push('/')
     } catch (err) {
       message.error(`Login failed: ${JSON.stringify(err.response.data)}`);
