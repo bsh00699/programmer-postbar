@@ -5,13 +5,13 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Axios from 'axios';
 import { useRouter } from 'next/router'
-// import { useAuthState } from '../context/auth'
+import { useAuthState } from '../ctx/auth'
 
 export default function Register() {
-  // const { authenticated } = useAuthState()
+  const { authenticated } = useAuthState()
 
   const router = useRouter()
-  // if (authenticated) router.push('/')
+  if (authenticated) router.push('/')
   const onFinish = async (values: {
     email: string,
     password: string,

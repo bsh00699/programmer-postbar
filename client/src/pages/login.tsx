@@ -5,14 +5,14 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Axios from 'axios';
 import { useRouter } from 'next/router'
-import { useAuthDispatch } from '../ctx/auth'
+import { useAuthDispatch, useAuthState } from '../ctx/auth'
 
 export default function Register() {
-  // const { authenticated } = useAuthState ()
+  const { authenticated } = useAuthState()
   const dispatch = useAuthDispatch()
 
   const router = useRouter()
-  // if (authenticated) router.push('/')
+  if (authenticated) router.push('/')
   const onFinish = async (values: {
     password: string,
     username: string
@@ -23,7 +23,9 @@ export default function Register() {
         password,
         username,
       })
-      dispatch({ type: 'LOGIN', payload: res.data })
+      console.log('res==', res);
+
+      dispatch('LOGIN', res.data)
       router.push('/')
     } catch (err) {
       message.error(`Login failed: ${JSON.stringify(err.response.data)}`);

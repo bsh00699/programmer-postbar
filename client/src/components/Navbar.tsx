@@ -1,6 +1,24 @@
+import Axios from 'axios';
 import Link from 'next/link'
+import { Fragment } from 'react'
+import { useAuthDispatch, useAuthState } from '../ctx/auth'
 
 const Navebar: React.FC = () => {
+  const { authenticated, loading } = useAuthState()
+  const dispatch = useAuthDispatch()
+
+  const Logout = () => {
+    Axios.get('/auth/logout')
+      .then(() => {
+        dispatch('LOGOUT')
+        window.location.reload()
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
+
   return <div className='fixed inset-x-0 top-0 z-10 flex items-center justify-center h-12 px-5 bg-white'>
     <div className="flex items-center">
       <Link href='/'>
@@ -21,12 +39,28 @@ const Navebar: React.FC = () => {
     </div>
     {/* Login && logout */}
     <div className="flex">
-      <Link href='/login'>
-        <a className="py-1 mr-2 leading-5 w-28 hollow blue button">Log In</a>
-      </Link>
-      <Link href='/register'>
-        <a className="py-1 leading-5 w-28 blue button">Sign Up</a>
-      </Link>
+      {
+        !loading && (
+          authenticated
+            ? (
+              <Fragment>
+                <a className="py-1 mr-2 leading-5 w-28 hollow blue button"
+                  onClick={Logout}
+                >Logout</a>
+              </Fragment>
+            )
+            : (
+              <Fragment>
+                <Link href='/login'>
+                  <a className="py-1 mr-2 leading-5 w-28 hollow blue button">Log In</a>
+                </Link>
+                <Link href='/register'>
+                  <a className="py-1 leading-5 w-28 blue button">Sign Up</a>
+                </Link>
+              </Fragment>
+            )
+        )
+      }
     </div>
   </div>
 }
