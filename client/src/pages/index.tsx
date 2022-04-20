@@ -8,16 +8,18 @@ import Link from 'next/link'
 import { Post } from '../common/types'
 import PostCard from '../components/PostCard'
 
+import useSWR from 'swr'
+
 dayjs.extend(relativeTime)
 
 export default function Home() {
-  const [posts, setPosts] = useState<Post[]>([])
-
-  useEffect(() => {
-    Axios.get('/posts')
-      .then(res => setPosts(res.data))
-      .catch(err => console.log('Get Posts Err:', err))
-  }, [])
+  const { data: posts, error } = useSWR('/posts')
+  // const [posts, setPosts] = useState<Post[]>([])
+  // useEffect(() => {
+  //   Axios.get('/posts')
+  //     .then(res => setPosts(res.data))
+  //     .catch(err => console.log('Get Posts Err:', err))
+  // }, [])
   return (
     <div className='pt-12'>
       <Head>
@@ -28,7 +30,7 @@ export default function Home() {
         {/* posts */}
         <div className="w-160">
           {
-            posts.map((post: Post) => {
+            posts?.map((post: Post) => {
               return <PostCard post={post} key={post.identifier} />
             })
           }

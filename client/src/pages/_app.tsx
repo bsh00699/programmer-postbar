@@ -1,6 +1,7 @@
 import { AppProps } from 'next/app'
 import Axios from 'axios';
 import { useRouter } from 'next/router'
+import { SWRConfig } from 'swr'
 import Navebar from '../components/Navbar'
 import '../styles/tailwind.css'
 import 'antd/dist/antd.css';
@@ -16,10 +17,17 @@ function App({ Component, pageProps }: AppProps) {
   const authRoute = pathname === '/register' || pathname === '/login'
 
   return (
-    <AuthProvider>
-      {!authRoute && <Navebar />}
-      <Component {...pageProps} />
-    </AuthProvider>
+    <SWRConfig
+      value={{
+        refreshInterval: 10000,
+        fetcher: (url) => Axios.get(url).then(res => res.data)
+      }}
+    >
+      <AuthProvider>
+        {!authRoute && <Navebar />}
+        <Component {...pageProps} />
+      </AuthProvider>
+    </SWRConfig>
   )
 }
 
