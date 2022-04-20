@@ -25,7 +25,7 @@ const Navebar: React.FC = () => {
         <img src="/images/crazyCode.png" className='w-8 h-10 mr-2' />
       </Link>
       <span className='hidden text-2xl lg:block'>
-        <Link href='/'><span style={{ color: '#1C1C1C' }}><b>Crazy</b> Code</span></Link>
+        <Link href='/'><span style={{ color: '#1C1C1C' }}><b>Crazy</b> Bar</span></Link>
       </span>
     </div>
     {/* Search */}

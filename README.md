@@ -9,37 +9,25 @@
 * 前端框架采用react,因为它使用广泛，拥有不用的套件库，来满足我们开发中的任何需求或者问题
 * 服务端渲染采用Next.js,因为它支持静态生成 (SSG) 、服务器端渲染 (SSR)、TypeScript、智能化打包、 路由预取等功能 无需任何配置
 * CSS方面使用tailwindcss,因为它集成了诸如 flex, pt-4, text-center 和 rotate-90 这样的的类，它们能直接在脚本标记语言中组合起来，构建出任何设计
+* 搭配SWR减轻服务器压力
 
 #### 安装PostgreSQL
 * [Mac OS 上安装 PostgreSQL](https://www.runoob.com/postgresql/mac-install-postgresql.html)
-#### 需要的依赖
+#### seed
 ```
-npm install typeorm -g
-npm init --database postgres
-
-npm install express
-npm install -D @types/express morgan @types/morgan
-npm install -D nodemon
-npm install class-validator
-npm install bcrypt
-npm install -D @types/bcrypt
-npm install class-transformer
-npm install jsonwebtoken cookie cookie-parser
-npm install -D @types/jsonwebtoken @types/cookie @types/cookie-parser
-npm i dotenv
-
+npm run typeorm schema:drop
+npm run seed
+```
+#### start
+```
+npm run dev
 ```
 #### use cli migration
 ```
 npm run typeorm schema:drop
-// user
 npm run typeorm migration:generate -- --name create-users-table
 npm run typeorm migration:run
-
-// comments
 npm run typeorm migration:generate -- --name create-comments-table
 npm run typeorm migration:run
-
-// 撤销上一次migration
 npm run typeorm migration:revert
 ```
