@@ -12,6 +12,15 @@ import { AuthProvider } from '../ctx/auth'
 Axios.defaults.baseURL = 'http://localhost:3333/api'
 Axios.defaults.withCredentials = true // set cookie, withCredentials: true
 
+const fetcher = async (url: string) => {
+  try {
+    const res = await Axios.get(url)
+    return res.data
+  } catch (err) {
+    throw err.response.data
+  }
+}
+
 function App({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter()
   const authRoute = pathname === '/register' || pathname === '/login'
@@ -20,12 +29,14 @@ function App({ Component, pageProps }: AppProps) {
     <SWRConfig
       value={{
         refreshInterval: 10000,
-        fetcher: (url) => Axios.get(url).then(res => res.data)
+        fetcher
       }}
     >
       <AuthProvider>
         {!authRoute && <Navebar />}
-        <Component {...pageProps} />
+        <div className={!authRoute ? 'pt-12' : ''}>
+          <Component {...pageProps} />
+        </div>
       </AuthProvider>
     </SWRConfig>
   )

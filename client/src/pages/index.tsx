@@ -21,7 +21,7 @@ export default function Home() {
   //     .catch(err => console.log('Get Posts Err:', err))
   // }, [])
   return (
-    <div className='pt-12'>
+    <div>
       <Head>
         <title>Welcome to the programmer community</title>
         <link rel="icon" href="/favicon.ico" />

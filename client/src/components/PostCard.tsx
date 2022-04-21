@@ -58,12 +58,17 @@ const PostCard = ({ post }: PostCardProps) => {
 
         <div className="flex items-center">
           <Link href={`/r/${subName}`}>
-            <Fragment>
-              <img src="/images/gravatar.png" className='w-6 h-6 mr-1 rounded-full cursor-pointer' />
-              <span className='text-xs font-bold cursor-pointer hover:underline'>
+            {/* <Fragment> */}
+            <img src="/images/gravatar.png" className='w-6 h-6 mr-1 rounded-full cursor-pointer' />
+            {/* <span className='text-xs font-bold cursor-pointer hover:underline'>
                 /r/{subName}
-              </span>
-            </Fragment>
+              </span> */}
+            {/* </Fragment> */}
+          </Link>
+          <Link href={`/r/${subName}`}>
+            <span className='text-xs font-bold cursor-pointer hover:underline'>
+              /r/{subName}
+            </span>
           </Link>
           <div className="text-xs text-gray-600">
             <span className='mx-1'>•</span>
