@@ -1,11 +1,14 @@
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { isEmpty } from 'class-validator'
 import { getRepository } from 'typeorm'
+import multer, { FileFilterCallback } from 'multer'
+import path from 'path'
 import Sub from "../entities/Sub";
 import User from "../entities/User";
 import auth from '../middleware/auth'
 import user from '../middleware/user'
 import Post from "../entities/Post";
+import { makeId } from "../util/helper";
 
 
 const createSub = async (req: Request, res: Response) => {
@@ -63,8 +66,69 @@ const getSub = async (req: Request, res: Response) => {
   }
 }
 
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: 'public/images',
+    filename: (_, file, callback) => {
+      let name = makeId(15)
+      name = name + path.extname(file.originalname)
+      callback(null, name)
+    }
+  }),
+  fileFilter: (_, file: any, callback: FileFilterCallback) => {
+    const { mimetype } = file
+    if (mimetype === 'image/jpeg' || mimetype === 'image/png') {
+      callback(null, true)
+    } else {
+      callback(new Error('File not an image'))
+    }
+  }
+})
+
+const ownSub = async (req: Request, res: Response, next: NextFunction) => {
+  const { name } = req.params
+  const user: User = res.locals.user
+  try {
+    const sub = await Sub.findOneOrFail({
+      where: { name }
+    })
+    if (sub.username !== user.username) {
+      return res.status(403).json({
+        error: 'You dont own this sub'
+      })
+    }
+    res.locals.sub = sub
+    return next()
+  } catch (err) {
+    return res.status(500).json({
+      error: 'Something wrong'
+    })
+  }
+}
+const uploadSubImage = async (req: Request, res: Response) => {
+  const sub: Sub = res.locals.sub
+  try {
+    const type = req.body.type
+    if (type !== 'image' && type !== 'banner') {
+      return res.status(400).json({
+        error: 'Invalid type'
+      })
+    }
+    if (type === 'image') {
+      sub.imageUrn = req.file?.filename || ''
+    } else if (type === 'banner') {
+      sub.bannerUrn = req.file?.filename || ''
+    }
+    await sub.save()
+    return res.json(sub)
+  } catch (err) {
+    return res.status(400).json({ error: 'Something went wrong' })
+  }
+}
+
 const router = Router()
 router.get('/:name', user, getSub)
 router.post('/', user, auth, createSub)
+router.post('/:name/image', user, auth, ownSub, upload.single('file'), uploadSubImage)
 
 export default router

@@ -33,6 +33,9 @@ export default class Sub extends EntityInter {
   @Column({ nullable: true }) // 横幅
   bannerUrn: string
 
+  @Column()
+  username: string
+
   @ManyToOne(() => User)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User
