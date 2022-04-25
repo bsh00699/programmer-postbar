@@ -25,6 +25,7 @@ app.use(cors({
   origin: process.env.ORIGIN,
   optionsSuccessStatus: 200
 }))
+app.use(express.static('public'))
 
 app.use('/api/auth', authRoutes)
 app.use('/api/posts', postRoutes)

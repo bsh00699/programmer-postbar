@@ -3,6 +3,7 @@ import { isEmpty } from 'class-validator'
 import { getRepository } from 'typeorm'
 import multer, { FileFilterCallback } from 'multer'
 import path from 'path'
+import fs from 'fs'
 import Sub from "../entities/Sub";
 import User from "../entities/User";
 import auth from '../middleware/auth'
@@ -109,20 +110,31 @@ const uploadSubImage = async (req: Request, res: Response) => {
   const sub: Sub = res.locals.sub
   try {
     const type = req.body.type
+    if (!req.file?.path) {
+      return res.status(400).json({ error: 'Invalid file' })
+    }
     if (type !== 'image' && type !== 'banner') {
+      // 尽管文件类型无效，但是也会上传到服务器,所以要把上传的删除掉
+      fs.unlinkSync(req.file.path)
       return res.status(400).json({
         error: 'Invalid type'
       })
     }
+    let oldImageUrn: string = ''
     if (type === 'image') {
-      sub.imageUrn = req.file?.filename || ''
+      oldImageUrn = sub.imageUrn ?? ''
+      sub.imageUrn = req.file.filename
     } else if (type === 'banner') {
-      sub.bannerUrn = req.file?.filename || ''
+      oldImageUrn = sub.bannerUrn ?? ''
+      sub.bannerUrn = req.file.filename
     }
     await sub.save()
+    if (oldImageUrn !== '') {
+      fs.unlinkSync(`public/images/${oldImageUrn}`)
+    }
     return res.json(sub)
   } catch (err) {
-    return res.status(400).json({ error: 'Something went wrong' })
+    return res.status(500).json({ error: `Something went wrong: ${err}` })
   }
 }
 

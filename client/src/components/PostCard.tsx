@@ -60,9 +60,6 @@ const PostCard = ({ post }: PostCardProps) => {
           <Link href={`/r/${subName}`}>
             {/* <Fragment> */}
             <img src="/images/gravatar.png" className='w-6 h-6 mr-1 rounded-full cursor-pointer' />
-            {/* <span className='text-xs font-bold cursor-pointer hover:underline'>
-                /r/{subName}
-              </span> */}
             {/* </Fragment> */}
           </Link>
           <Link href={`/r/${subName}`}>
