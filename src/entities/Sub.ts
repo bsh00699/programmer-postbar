@@ -9,6 +9,7 @@ import {
 import EntityInter from './Entity'
 import User from './User'
 import Post from './Post'
+import { Expose } from "class-transformer";
 
 @TOEntity("subs")
 export default class Sub extends EntityInter {
@@ -42,4 +43,16 @@ export default class Sub extends EntityInter {
 
   @OneToMany(() => Post, post => post.subName)
   posts: Post
+
+  @Expose()
+  get imageUrl(): string {
+    return this.imageUrn ? `${process.env.APP_URL}/images/${this.imageUrn}`
+      : `${process.env.APP_URL}/_img/gravatar.png`
+  }
+
+  @Expose()
+  get bannerUrl(): string | undefined {
+    return this.bannerUrn ? `${process.env.APP_URL}/images/${this.bannerUrn}`
+      : undefined
+  }
 }
