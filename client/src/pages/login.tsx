@@ -23,10 +23,9 @@ export default function Register() {
         password,
         username,
       })
-      console.log('res==', res);
 
       dispatch('LOGIN', res.data)
-      router.push('/')
+      router.back() // 登录的话应该重新定位到之前的浏览位置
     } catch (err) {
       message.error(`Login failed: ${JSON.stringify(err.response.data)}`);
     }

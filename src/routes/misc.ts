@@ -77,7 +77,7 @@ const topSubs = async (_: Request, res: Response) => {
      * ORDER BY "postCount" DESC
      * LIMIT 5;
      */
-    const imageUrlExp = `COALESCE('${process.env.APP_URL}/images/' || s."imageUrn" , 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y')`
+    const imageUrlExp = `COALESCE('${process.env.APP_URL}/images/' || s."imageUrn" , '${process.env.APP_URL}/_img/gravatar.png')`
     const subs = await getConnection()
       .createQueryBuilder()
       .select(
@@ -92,7 +92,7 @@ const topSubs = async (_: Request, res: Response) => {
 
     return res.json(subs)
   } catch (err) {
-    return res.status(500).json({ error: 'Something went wrong' })
+    return res.status(500).json({ error: `Something went wrong: ${err}` })
   }
 }
 
