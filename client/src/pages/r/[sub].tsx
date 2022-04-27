@@ -3,6 +3,7 @@ import useSWR from "swr"
 import Head from 'next/head'
 import { Post, Sub } from "../../common/types"
 import PostCard from "../../components/PostCard"
+import SideBar from "../../components/SideBar"
 import { ChangeEvent, createRef, Fragment, useEffect, useState } from "react"
 import Image from 'next/image'
 import { useAuthState } from '../../ctx/auth'
@@ -15,7 +16,7 @@ const SubPage = () => {
   const router = useRouter()
   const fileInputRef = createRef<HTMLInputElement>()
   const { sub: subName } = router.query
-  const { data: sub, error } = useSWR<Sub>(subName ? `/subs/${subName}` : null)
+  const { data: sub, error, mutate } = useSWR<Sub>(subName ? `/subs/${subName}` : null)
 
   if (error) {
     // sub 不存在重定向到home
@@ -38,11 +39,11 @@ const SubPage = () => {
     const formData = new FormData()
     formData.append('file', file)
     formData.append('type', fileInputRef.current.name)
-
     try {
       await Axios.post<Sub>(`/subs/${sub.name}/image`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
+      mutate()
     } catch (err) {
       console.log(err);
     }
@@ -77,7 +78,7 @@ const SubPage = () => {
               {
                 sub.bannerUrl
                   ? (
-                    <div className="bg-blue-500 h-36" style={{
+                    <div className="h-56 bg-blue-500" style={{
                       backgroundImage: `url(${sub.bannerUrl})`,
                       backgroundRepeat: 'no-repeat',
                       backgroundSize: 'cover',
@@ -114,6 +115,7 @@ const SubPage = () => {
               <div className='w-160'>
                 {postsMark}
               </div>
+              <SideBar sub={sub} />
             </div>
           </Fragment>
         )
