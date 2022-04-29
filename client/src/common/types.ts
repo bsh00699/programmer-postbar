@@ -11,6 +11,7 @@ export interface Post {
   voteScore?: number
   commentCount?: number
   userVote?: number
+  sub?: Sub
 }
 
 export interface User {
