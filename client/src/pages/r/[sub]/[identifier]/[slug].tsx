@@ -9,11 +9,13 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import classNames from 'classnames'
 import { Post } from '../../../../common/types'
 import SideBar from '../../../../components/SideBar'
+import { useAuthState } from '../../../../ctx/auth'
 
 dayjs.extend(relativeTime)
 
 const PostPage = () => {
 
+  const { authenticated } = useAuthState()
   const router = useRouter()
   const { identifier, sub, slug } = router.query
   const { data: post, error } = useSWR<Post>(
@@ -26,7 +28,17 @@ const PostPage = () => {
     router.push('/')
   }
 
-  const vote = async (value) => {
+  const { body, subName, title, createdAt, username,
+    url, voteScore, commentCount, userVote } = post
+
+  const vote = async (value: number) => {
+    if (!authenticated) {
+      router.push('/login')
+      return
+    }
+    if (value === post.userVote) {
+      value = 0
+    }
     try {
       const res = Axios.post('/misc/vote', {
         identifier, slug, value
@@ -39,7 +51,7 @@ const PostPage = () => {
   return (
     <>
       <Head>
-        <title>{post?.title}</title>
+        <title>{title}</title>
       </Head>
       <Link href={`/r/${sub}`}>
         <div className="flex items-center w-full h-20 p-8 bg-blue-500">
@@ -87,6 +99,22 @@ const PostPage = () => {
                         'text-blue-600': post.userVote === -1
                       })}></i>
                     </div>
+                  </div>
+                  <div className="p-2">
+                    <div className="flex items-center">
+
+                      <div className="text-xs text-gray-600">
+                        <span className='mx-1'>•</span>
+                        Posted by
+                        <Link href={`u/${username}`}>
+                          <span className='mx-1 hover:underline'>/u/{username}</span>
+                        </Link>
+                        <Link href={url}>
+                          <span className='mx-1 hover:underline'>{dayjs(createdAt).fromNow()}</span>
+                        </Link>
+                      </div>
+                    </div>
+
                   </div>
 
                 </div>
