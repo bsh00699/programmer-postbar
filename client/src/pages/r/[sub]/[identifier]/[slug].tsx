@@ -10,6 +10,7 @@ import classNames from 'classnames'
 import { Post } from '../../../../common/types'
 import SideBar from '../../../../components/SideBar'
 import { useAuthState } from '../../../../ctx/auth'
+import ActionButton from '../../../../components/ActionButton'
 
 dayjs.extend(relativeTime)
 
@@ -28,8 +29,8 @@ const PostPage = () => {
     router.push('/')
   }
 
-  const { body, subName, title, createdAt, username,
-    url, voteScore, commentCount, userVote } = post
+  // const { body, subName, title, createdAt, username,
+  //   url, voteScore, commentCount, userVote } = post
 
   const vote = async (value: number) => {
     if (!authenticated) {
@@ -51,7 +52,7 @@ const PostPage = () => {
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{post?.title}</title>
       </Head>
       <Link href={`/r/${sub}`}>
         <div className="flex items-center w-full h-20 p-8 bg-blue-500">
@@ -61,7 +62,7 @@ const PostPage = () => {
               post && (
                 <div className="w-8 h-8 mr-2 overflow-hidden rounded-full">
                   <Image
-                    src={post.sub.imageUrl}
+                    src={post?.sub.imageUrl}
                     height={70}
                     width={70}
                   />
@@ -102,21 +103,38 @@ const PostPage = () => {
                   </div>
                   <div className="p-2">
                     <div className="flex items-center">
-
                       <div className="text-xs text-gray-600">
-                        <span className='mx-1'>•</span>
                         Posted by
-                        <Link href={`u/${username}`}>
-                          <span className='mx-1 hover:underline'>/u/{username}</span>
+                        <Link href={`u/${post.username}`}>
+                          <span className='mx-1 hover:underline'>/u/{post.username}</span>
                         </Link>
-                        <Link href={url}>
-                          <span className='mx-1 hover:underline'>{dayjs(createdAt).fromNow()}</span>
+                        <Link href={post?.url}>
+                          <span className='mx-1 hover:underline'>{dayjs(post.createdAt).fromNow()}</span>
                         </Link>
                       </div>
                     </div>
-
+                    {/* title */}
+                    <div className="my-1 text-xl font-medium">{post.title}</div>
+                    {/* body */}
+                    <div className="my-3 textsm">{post.body}</div>
+                    {/* actionbtn */}
+                    <div className="flex items-center">
+                      <Link href={post.url}>
+                        <ActionButton>
+                          <i className="mr-1 text-gray-400 fa-solid fa-message"></i>
+                          <span className='font-bold'>{post.commentCount} Comments</span>
+                        </ActionButton>
+                      </Link>
+                      <ActionButton>
+                        <i className="mr-1 text-gray-400 fa-solid fa-share"></i>
+                        <span className='font-bold'>Share</span>
+                      </ActionButton>
+                      <ActionButton>
+                        <i className="mr-1 text-gray-400 fa-solid fa-bookmark"></i>
+                        <span className='font-bold'>Save</span>
+                      </ActionButton>
+                    </div>
                   </div>
-
                 </div>
               )
             }
