@@ -13,8 +13,6 @@ export default function user() {
   const { data, error } = useSWR<any>(username ? `/users/${username}` : null)
   if (error) router.push('/')
 
-  if (data) console.log(data)
-
   return (
     <>
       <Head>
@@ -38,24 +36,23 @@ export default function user() {
                       <i className="text-gray-500 fas fa-comment-alt fa-xs"></i>
                     </div>
                     <div className="w-full p-2">
-                      <p className="mb-2 text-xs text-gray-500">
+                      <div className="mb-2 text-xs text-gray-500">
                         {comment.username}
-
                         <span> commented on </span>
                         <Link href={comment.post.url}>
-                          <a className="font-semibold cursor-pointer hover:underline">
+                          <span className="font-semibold text-black cursor-pointer hover:underline">
                             {comment.post.title}
-                          </a>
+                          </span>
                         </Link>
                         <span className="mx-1">•</span>
                         <Link href={`/r/${comment.post.subName}`}>
-                          <a className="text-black cursor-pointer hover:underline">
+                          <span className="text-black cursor-pointer hover:underline">
                             /r/{comment.post.subName}
-                          </a>
+                          </span>
                         </Link>
-                      </p>
+                      </div>
                       <hr />
-                      <p>{comment.body}</p>
+                      <div>{comment.body}</div>
                     </div>
                   </div>
                 )
@@ -66,7 +63,7 @@ export default function user() {
             <div className="bg-white rounded">
               <div className="p-3 bg-blue-500 rounded-t">
                 <img
-                  src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                  src="/images/gravatar.png"
                   alt="user profile"
                   className="w-16 h-16 mx-auto border-2 border-white rounded-full"
                 />
@@ -74,9 +71,9 @@ export default function user() {
               <div className="p-3 text-center">
                 <h1 className="mb-3 text-xl">{data.user.username}</h1>
                 <hr />
-                <p className="mt-3">
+                <div className="mt-3">
                   Joined {dayjs(data.user.createdAt).format('MMM YYYY')}
-                </p>
+                </div>
               </div>
             </div>
           </div>
