@@ -33,17 +33,18 @@ const getUserSubmissions = async (req: Request, res: Response) => {
     comments.forEach(c => submissions.push({ type: 'Commen', ...c.toJSON() }))
 
     submissions.sort((a, b) => {
-      if (a.createdAt > a.createdAt) return 1
-      if (a.createdAt < a.createdAt) return -1
+      if (b.createdAt > a.createdAt) return 1
+      if (b.createdAt < a.createdAt) return -1
       return 0
     })
 
     return res.json({ user, submissions })
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: `Get user submissions err: ${err}` })
+    return res.status(500).json({ error: `Get user submissions err: ${err}` })
   }
 }
 
 const router = Router()
 router.get('/:username', user, getUserSubmissions)
+export default router
