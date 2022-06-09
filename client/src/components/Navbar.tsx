@@ -19,7 +19,6 @@ const Navebar: React.FC = () => {
 
   useEffect(() => {
     if (name.trim() === '') {
-      console.log('kong');
       setSubs([])
       return
     }
