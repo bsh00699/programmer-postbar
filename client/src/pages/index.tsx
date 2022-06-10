@@ -10,12 +10,15 @@ import { Post, Sub } from '../common/types'
 import PostCard from '../components/PostCard'
 
 import useSWR from 'swr'
+import { useAuthState } from '../ctx/auth'
 
 dayjs.extend(relativeTime)
 
 export default function Home() {
-  const { data: posts, error } = useSWR('/posts')
-  const { data: topSubs } = useSWR('/misc/top-subs')
+  const { data: posts, error } = useSWR<Post[]>('/posts')
+  const { data: topSubs } = useSWR<Sub[]>('/misc/top-subs')
+
+  const { authenticated } = useAuthState()
   // const [posts, setPosts] = useState<Post[]>([])
   // useEffect(() => {
   //   Axios.get('/posts')
@@ -53,13 +56,15 @@ export default function Home() {
                     <div key={name} className='flex items-center px-4 py-2 text-xs border-b'>
                       {/* image */}
                       <Link href={`r/${name}`}>
-                        <Image
-                          src={imageUrl}
-                          alt='Sub'
-                          width={32}
-                          height={32}
-                          className='rounded-full hover:cursor-pointer'
-                        />
+                        <a>
+                          <Image
+                            src={imageUrl}
+                            alt='Sub'
+                            width={32}
+                            height={32}
+                            className='rounded-full hover:cursor-pointer'
+                          />
+                        </a>
                       </Link>
                       <Link href={`r/${name}`}>
                         <div className='ml-2 font-bold hover:cursor-pointer'>
@@ -67,12 +72,20 @@ export default function Home() {
                         </div>
                       </Link>
                       <p className='ml-auto font-med'>{postCount}</p>
-
                     </div>
                   )
                 })
               }
             </div>
+            {authenticated && (
+              <div className="p-4 border-t-2">
+                <Link href='/subs/create'>
+                  <div className="w-full px-2 py-1 blue button">
+                    Create Community
+                  </div>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
