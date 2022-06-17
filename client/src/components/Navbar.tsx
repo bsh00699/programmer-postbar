@@ -54,7 +54,7 @@ const Navebar: React.FC = () => {
     setName('')
   }
 
-  return <div className='fixed inset-x-0 top-0 z-10 flex items-center justify-center h-12 px-5 bg-white'>
+  return <div className='fixed inset-x-0 top-0 z-10 flex items-center justify-between h-12 px-5 bg-white'>
     <div className="flex items-center">
       <Link href='/'>
         <img src="/images/crazyCode.png" className='w-8 h-10 mr-2' />
@@ -64,36 +64,38 @@ const Navebar: React.FC = () => {
       </span>
     </div>
     {/* Search */}
-    <div className="relative flex items-center mx-auto bg-gray-100 border rounded hover:border-blue-500 hover:bg-white">
-      <i className="pl-3 pr-3 text-gray-500 fas fa-search"></i>
-      <input
-        type="text"
-        className='py-1 pr-3 bg-transparent rounded h-9 w-80 focus:outline-none'
-        placeholder='Search'
-        value={name}
-        onChange={e => setName(e.target.value)}
-      />
-      <div className="absolute left-0 right-0 bg-white" style={{ top: '100%' }}>
-        {
-          subs?.map(sub => (
-            <div
-              className="flex items-center px-4 py-3 cursor-pointer hover:bg-gray-200"
-              onClick={() => goToSub(sub.name)}
-            >
-              <Image
-                src={sub.imageUrl}
-                className='rounded-full'
-                alt='Sub'
-                height={32}
-                width={32}
-              />
-              <div className="ml-4 text-sm">
-                <div className="font-medium">{sub.name}</div>
-                <div className="text-gray-600">{sub.title}</div>
+    <div className="max-w-full px-4 w-160">
+      <div className="relative flex items-center mx-auto bg-gray-100 border rounded hover:border-blue-500 hover:bg-white">
+        <i className="pl-3 pr-3 text-gray-500 fas fa-search"></i>
+        <input
+          type="text"
+          className='py-1 pr-3 bg-transparent rounded h-9 focus:outline-none'
+          placeholder='Search'
+          value={name}
+          onChange={e => setName(e.target.value)}
+        />
+        <div className="absolute left-0 right-0 bg-white" style={{ top: '100%' }}>
+          {
+            subs?.map(sub => (
+              <div
+                className="flex items-center px-4 py-3 cursor-pointer hover:bg-gray-200"
+                onClick={() => goToSub(sub.name)}
+              >
+                <Image
+                  src={sub.imageUrl}
+                  className='rounded-full'
+                  alt='Sub'
+                  height={32}
+                  width={32}
+                />
+                <div className="ml-4 text-sm">
+                  <div className="font-medium">{sub.name}</div>
+                  <div className="text-gray-600">{sub.title}</div>
+                </div>
               </div>
-            </div>
-          ))
-        }
+            ))
+          }
+        </div>
       </div>
     </div>
     {/* Login && logout */}
@@ -103,7 +105,7 @@ const Navebar: React.FC = () => {
           authenticated
             ? (
               <Fragment>
-                <a className="py-1 mr-2 leading-5 w-28 hollow blue button"
+                <a className="hidden w-20 py-1 mr-2 leading-5 sm:block lg:w-28 hollow blue button"
                   onClick={Logout}
                 >Logout</a>
               </Fragment>
@@ -111,10 +113,10 @@ const Navebar: React.FC = () => {
             : (
               <Fragment>
                 <Link href='/login'>
-                  <a className="py-1 mr-2 leading-5 w-28 hollow blue button">Log In</a>
+                  <a className="hidden w-20 py-1 mr-2 leading-5 sm:block lg:w-28 hollow blue button">Log In</a>
                 </Link>
                 <Link href='/register'>
-                  <a className="py-1 leading-5 w-28 blue button">Sign Up</a>
+                  <a className="hidden w-20 py-1 leading-5 sm:block lg:w-28 blue button">Sign Up</a>
                 </Link>
               </Fragment>
             )

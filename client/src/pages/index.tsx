@@ -33,7 +33,7 @@ export default function Home() {
       </Head>
       <div className="container flex pr-4">
         {/* posts */}
-        <div className="w-160">
+        <div className="w-full px-4 md:w-160 md:p-0">
           {
             posts?.map((post: Post) => {
               return <PostCard post={post} key={post.identifier} />
@@ -41,7 +41,7 @@ export default function Home() {
           }
         </div>
         {/* side bar */}
-        <div className="mt-4 ml-6 w-80">
+        <div className="hidden mt-4 ml-6 md:block w-80">
           <div className="bg-white rounded">
             <div className="p-4 border-b-2">
               <p className="text-lg font-semibold text-center">
