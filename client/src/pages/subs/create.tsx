@@ -1,15 +1,31 @@
 import Axios from 'axios'
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import Head from 'next/head'
 import { GetServerSideProps } from "next"
 import classNames from 'classnames'
+import { useRouter } from 'next/router'
 
 const Create = () => {
 
   const [name, setName] = useState('')
   const [title, setTitle] = useState('')
-  const [desc, setDesc] = useState('')
+  const [description, setDesc] = useState('')
   const [errors, setErrors] = useState<any>({})
+
+  const router = useRouter()
+
+  const submitForm = async (e: FormEvent) => {
+    e.preventDefault()
+    try {
+      const res = await Axios.post(`/subs`, {
+        name, title, description
+      })
+      router.push(`/r/${res.data.name}`)
+    } catch (err) {
+      console.log(err);
+      setErrors(err.response.data)
+    }
+  }
 
   return (
     <div className='flex bg-white'>
@@ -25,7 +41,7 @@ const Create = () => {
         <div className="w-98">
           <div className="mb-2 text-lg font-medium">Create a Community</div>
           <hr />
-          <form>
+          <form onSubmit={submitForm}>
             <div className="my-6">
               <div className="font-medium">Name</div>
               <div className="mb-2 text-xs text-gray-500">
@@ -61,12 +77,12 @@ const Create = () => {
               </div>
               <textarea
                 className={classNames('w-full p-3 border border-gray-200 rounded', {
-                  'border-red-600': errors.name
+                  'border-red-600': errors.description
                 })}
-                value={desc}
+                value={description}
                 onChange={(e) => setDesc(e.target.value)}
               />
-              <small className='font-medium text-red-600'>{errors.desc}</small>
+              <small className='font-medium text-red-600'>{errors.description}</small>
             </div>
             <div className="flex justify-end">
               <button className="px-4 py-1 blue button">
@@ -78,7 +94,6 @@ const Create = () => {
       </div>
     </div>
   )
-
 }
 
 export default Create
