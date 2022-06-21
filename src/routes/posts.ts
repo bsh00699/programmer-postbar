@@ -27,26 +27,22 @@ const createPost = async (req: Request, res: Response) => {
   }
 }
 
-const getPosts = async (_: Request, res: Response) => {
-  // const currentPage: number = (req.query.page || 0) as number
-  // const postsPerPage: number = (req.query.count || 8) as number
+const getPosts = async (req: Request, res: Response) => {
+  const currentPage: number = (req.query.page || 0) as number
+  const postsPerPage: number = (req.query.count || 8) as number
 
   try {
     const posts = await Post.find({
       order: { createdAt: 'DESC' },
       relations: ['comments', 'votes', 'sub'],
+      skip: currentPage * postsPerPage,
+      take: postsPerPage
     })
     // 用户没登录可以获取posts
     // 如果用户登录了, 需要获取用户自己登录的投票,添加到post
     if (res.locals.user) {
       posts.forEach((p) => p.setUserVote(res.locals.user))
     }
-    // const posts = await Post.find({
-    //   order: { createdAt: 'DESC' },
-    //   relations: ['comments', 'votes', 'sub'],
-    //   skip: currentPage * postsPerPage,
-    //   take: postsPerPage,
-    // })
 
     return res.json(posts)
   } catch (err) {

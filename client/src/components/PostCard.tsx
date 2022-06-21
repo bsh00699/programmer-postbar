@@ -6,30 +6,38 @@ import Link from 'next/link'
 import { Post } from '../common/types'
 import classNames from 'classnames'
 import ActionButton from './ActionButton'
+import { useAuthState } from '../ctx/auth'
+import { useRouter } from 'next/router'
 
 dayjs.extend(relativeTime)
 
 interface PostCardProps {
   post: Post
+  revalidate?: Function
 }
 
-const PostCard = ({ post }: PostCardProps) => {
+const PostCard = ({ post, revalidate }: PostCardProps) => {
   const { identifier, body, subName, slug, title, createdAt, username,
     url, voteScore, commentCount, userVote } = post
-
-  const vote = async (value) => {
+  const { authenticated } = useAuthState()
+  const router = useRouter()
+  const vote = async (value: number) => {
+    if (!authenticated) {
+      router.push('/login')
+      return
+    }
+    if (value === userVote) value = 0
     try {
       const res = Axios.post('/misc/vote', {
         identifier, slug, value
       })
-      console.log('res--', res);
-
+      if (revalidate) revalidate()
     } catch (err) {
       console.log(err);
     }
   }
   return (
-    <div key={identifier} className="flex mt-4 bg-white rounded">
+    <div key={identifier} className="flex mt-4 bg-white rounded" id={identifier}>
       {/* 投票 */}
       <div className="w-10 py-3 text-center bg-gray-100 rounded-l">
         {/* upvote */}
@@ -48,7 +56,6 @@ const PostCard = ({ post }: PostCardProps) => {
       </div>
       {/* 内容 */}
       <div className="w-full p-2">
-
         <div className="flex items-center">
           <Link href={`/r/${subName}`}>
             {/* <Fragment> */}

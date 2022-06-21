@@ -10,12 +10,21 @@ import { Post, Sub } from '../common/types'
 import PostCard from '../components/PostCard'
 
 import useSWR from 'swr'
+import useSWRInfinite from "swr/infinite";
 import { useAuthState } from '../ctx/auth'
+import { Divider } from 'antd'
 
 dayjs.extend(relativeTime)
 
 export default function Home() {
-  const { data: posts, error } = useSWR<Post[]>('/posts')
+
+  const { data, error, mutate, size: page, setSize: setPage, isValidating } = useSWRInfinite<Post[]>(
+    (index) => `/posts?page=${index}`
+  );
+
+  const posts: Post[] = data ? [].concat(...data) : [];
+  // const isLoadingInitialData = !data && !error;
+  // const { data: posts, error } = useSWR<Post[]>('/posts')
   const { data: topSubs } = useSWR<Sub[]>('/misc/top-subs')
 
   const { authenticated } = useAuthState()
@@ -25,6 +34,30 @@ export default function Home() {
   //     .then(res => setPosts(res.data))
   //     .catch(err => console.log('Get Posts Err:', err))
   // }, [])
+
+  const [observedPost, setObversedPost] = useState('')
+  useEffect(() => {
+    if (!posts || posts.length === 0) return
+    const id = posts[posts.length - 1].identifier
+    if (id !== observedPost) {
+      setObversedPost(id)
+      observeElement(document.getElementById(id))
+    }
+  }, [posts])
+
+  const observeElement = (element: HTMLElement) => {
+    if (!element) return
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting === true) { // 到底部
+        setPage(page + 1)
+        observer.unobserve(element)
+      }
+    }, {
+      threshold: 1 // 0: 顶部 1: 底部
+    })
+    observer.observe(element)
+  }
+
   return (
     <div>
       <Head>
@@ -34,11 +67,17 @@ export default function Home() {
       <div className="container flex pr-4">
         {/* posts */}
         <div className="w-full px-4 md:w-160 md:p-0">
+          {isValidating && (
+            <div className="text-lg text-center">Loading...</div>
+          )}
           {
             posts?.map((post: Post) => {
-              return <PostCard post={post} key={post.identifier} />
+              return <PostCard post={post} key={post.identifier} revalidate={mutate} />
             })
           }
+          {isValidating && posts.length > 0 && (
+            <div className="text-lg text-center">Loading More...</div>
+          )}
         </div>
         {/* side bar */}
         <div className="hidden mt-4 ml-6 md:block w-80">
