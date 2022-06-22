@@ -18,9 +18,12 @@ interface PostCardProps {
 
 const PostCard = ({ post, revalidate }: PostCardProps) => {
   const { identifier, body, subName, slug, title, createdAt, username,
-    url, voteScore, commentCount, userVote } = post
+    url, voteScore, commentCount, userVote, sub } = post
   const { authenticated } = useAuthState()
   const router = useRouter()
+
+  const isInSubPage = router.pathname === '/r/[sub]'
+
   const vote = async (value: number) => {
     if (!authenticated) {
       router.push('/login')
@@ -57,18 +60,22 @@ const PostCard = ({ post, revalidate }: PostCardProps) => {
       {/* 内容 */}
       <div className="w-full p-2">
         <div className="flex items-center">
-          <Link href={`/r/${subName}`}>
-            {/* <Fragment> */}
-            <img src="/images/gravatar.png" className='w-6 h-6 mr-1 rounded-full cursor-pointer' />
-            {/* </Fragment> */}
-          </Link>
-          <Link href={`/r/${subName}`}>
-            <span className='text-xs font-bold cursor-pointer hover:underline'>
-              /r/{subName}
-            </span>
-          </Link>
+          {!isInSubPage && (
+            <>
+              <Link href={`/r/${subName}`}>
+                {/* <Fragment> */}
+                <img src={sub.imageUrl} className='w-6 h-6 mr-1 rounded-full cursor-pointer' />
+                {/* </Fragment> */}
+              </Link>
+              <Link href={`/r/${subName}`}>
+                <span className='text-xs font-bold cursor-pointer hover:underline'>
+                  /r/{subName}
+                </span>
+              </Link>
+              <span className='mx-1 text-xs text-gray-600'>•</span>
+            </>
+          )}
           <div className="text-xs text-gray-600">
-            <span className='mx-1'>•</span>
             Posted by
             <Link href={`u/${username}`}>
               <span className='mx-1 hover:underline'>/u/{username}</span>

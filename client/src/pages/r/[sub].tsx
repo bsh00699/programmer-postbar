@@ -57,7 +57,7 @@ const SubPage = () => {
   } else {
     postsMark = sub.posts.map((post: Post) => {
       const { identifier } = post
-      return <PostCard key={identifier} post={post} />
+      return <PostCard key={identifier} post={post} revalidate={mutate} />
     })
   }
 

@@ -23,7 +23,7 @@ export default function Home() {
   );
 
   const posts: Post[] = data ? [].concat(...data) : [];
-  // const isLoadingInitialData = !data && !error;
+  const isLoadingInitialData = !data && !error;
   // const { data: posts, error } = useSWR<Post[]>('/posts')
   const { data: topSubs } = useSWR<Sub[]>('/misc/top-subs')
 
@@ -67,7 +67,7 @@ export default function Home() {
       <div className="container flex pr-4">
         {/* posts */}
         <div className="w-full px-4 md:w-160 md:p-0">
-          {isValidating && (
+          {isLoadingInitialData && (
             <div className="text-lg text-center">Loading...</div>
           )}
           {
