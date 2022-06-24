@@ -36,6 +36,9 @@ export default function Home() {
   // }, [])
 
   const [observedPost, setObversedPost] = useState('')
+
+  const description = 'Crazy Bar 是一个基于人们兴趣的社区网络。 找到您感兴趣的社区，并成为在线社区的一部分！'
+  const title = 'Welcome to the programmer community'
   useEffect(() => {
     if (!posts || posts.length === 0) return
     const id = posts[posts.length - 1].identifier
@@ -61,7 +64,12 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Welcome to the programmer community</title>
+        <title>{title}</title>
+        <meta property='og:site_name' content="Crazy Bar" />
+        <meta name="description" content={description} />
+        <meta property='og:description' content={description} />
+        <meta property='og:title' content={title} />
+        <meta property='og:type' content="website" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="container flex pr-4">

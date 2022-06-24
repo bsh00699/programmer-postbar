@@ -11,7 +11,7 @@ import { Post, Comment } from '../../../../common/types'
 import SideBar from '../../../../components/SideBar'
 import { useAuthState } from '../../../../ctx/auth'
 import ActionButton from '../../../../components/ActionButton'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 
 dayjs.extend(relativeTime)
 
@@ -31,9 +31,19 @@ const PostPage = () => {
     identifier && slug ? `/posts/${identifier}/${slug}/comments` : null
   )
 
+  // SEO
+  const [description, setDescription] = useState('')
+
   if (error) {
     router.push('/')
   }
+
+  useEffect(() => {
+    if (!post) return
+    let desc = post.body || post.title
+    desc = desc.substring(0, 150).concat('...')
+    setDescription(desc)
+  }, [post])
 
   // const { body, subName, title, createdAt, username,
   //   url, voteScore, commentCount, userVote } = post
@@ -75,6 +85,10 @@ const PostPage = () => {
     <>
       <Head>
         <title>{post?.title}</title>
+        <meta property='og:site_name' content="Crazy Bar" />
+        <meta name="description" content={description} />
+        <meta property='og:description' content={description} />
+        <meta property='og:title' content={post.title} />
       </Head>
       <Link href={`/r/${sub}`}>
         <div className="flex items-center w-full h-20 p-8 bg-blue-500">

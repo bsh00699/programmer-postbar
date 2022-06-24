@@ -9,7 +9,7 @@ import '../styles/icons.css'
 
 import { AuthProvider } from '../ctx/auth'
 
-Axios.defaults.baseURL = 'http://localhost:3333/api'
+Axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/api`
 Axios.defaults.withCredentials = true // set cookie, withCredentials: true
 
 const fetcher = async (url: string) => {
